@@ -156,3 +156,4 @@ Route::get('user-settings/{user}', 'PagesController@userSettings');
 Route::post('user-settings','PagesController@postuserSettings');
 Route::get('register','PagesController@getRegister');
 Route::post('register','PagesController@postRegister');
+Route::get('search','PagesController@search');

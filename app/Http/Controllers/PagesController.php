@@ -1,13 +1,14 @@
 <?php
 namespace App\Http\Controllers;
-use Illuminate\Http\Request;
-use App\TheLoai;
-use App\Slide;
-use App\TinTuc;
 use App\Loaitin;
+use App\Mail\WelcomeMail;
+use App\Slide;
+use App\TheLoai;
+use App\TinTuc;
 use App\User;
 use Auth;
-use App\Mail\WelcomeMail;//include it
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Mail;//include it
 class PagesController extends Controller
 {   
@@ -175,6 +176,30 @@ class PagesController extends Controller
         //$comment= Comment::where('id', $id)->where('idUser',$user_id)->get();
         $user->delete();
         return redirect()->back()->with('success',"Register success!");
+    }
+
+    public function search(Request $request)
+    {   
+        DB::enableQueryLog();// enable the query log, phải để trc câu lệnh DB::, ko thì dd(DB::getQueryLog());sẽ ko chạy 
+
+        $term = $request->term;
+        $tintuc = 
+        DB::select(
+            'SELECT * FROM tintuc where 
+            -- BINARY TieuDe LIKE :tieude or
+            BINARY TomTat LIKE :tomtat',
+            [
+                //'tieude' => '%'. $term . '%',
+                'tomtat' => '%'. $term . '%'
+            ]
+        );//dùng BINARY vì ở đây search string với UTF-8, ko sẽ ra cả những chữ ko dấu tương tự (https://kipalog.com/posts/Cach-tim-kiem-co-dau-tren-Mysql---Search-utf8-on-Mysql)
+
+        // dd(DB::getQueryLog());// view the query log(arg)
+        
+        foreach($tintuc as $tt)
+        {
+            echo $tt->TomTat.'<br>';
+        }
     }
 
 }

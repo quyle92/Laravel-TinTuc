@@ -21,11 +21,11 @@
                     </li>
                 </ul>
 
-                <form class="navbar-form navbar-left" role="search">
+                <form class="navbar-form navbar-left" role="search" method="get" action="search">
 			        <div class="form-group">
-			          <input type="text" class="form-control" placeholder="Search">
+			          <input type="text" class="form-control" placeholder="Search" name="term">
 			        </div>
-			        <button type="submit" class="btn btn-default">Submit</button>
+			        <button type="submit" class="btn btn-default">Submit</button>{!! csrf_field() !!}
 			    </form>
 
 			    <ul class="nav navbar-nav pull-right">
