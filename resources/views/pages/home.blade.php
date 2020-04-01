@@ -28,14 +28,14 @@
 		                	</h3>
 		                	<?php 
 		                	//if(count($tl->TheLoaitoLoaiTin)>0)
-		                	//$data = $tl->TheLoaitoLoaiTintoTinTuc->where("NoiBat",1)->sortByDesc("created_at")->take(5);
+		                	$data = $tl->TheLoaitoLoaiTintoTinTuc->where("NoiBat",1)->sortByDesc("created_at")->take(5);
 		                	//Cách 1: $data1 = $data->shift();//print_r($data); 
 		                	$data1 = $data->values();
 		                	?>
 		                	<div class="col-md-8 border-right">
 		                		<div class="col-md-5">
 			                        <a href="detail.html">
-			                            <img class="img-responsive" src="upload/tintuc/{{$data1->get(0)->Hinh}}" alt=""> {{--Cách 1: or {{$data1->Hinh}} --}}
+			                            <img class="img-responsive" src="upload/tintuc/{{$data1[0]->Hinh}}" alt=""> {{--Cách 1: or {{$data1->Hinh}} --}}
 			                        </a>
 			                    </div>
 			                    <div class="col-md-7">
