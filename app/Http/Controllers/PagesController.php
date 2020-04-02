@@ -186,12 +186,12 @@ class PagesController extends Controller
         $tintuc = 
         DB::select(
             'SELECT * FROM tintuc where 
-            -- BINARY TieuDe LIKE :tieude or
-            BINARY TieuDe REGEXP :tieude',////BINARY is to convert words into binary so that it becomes "diacritic match"
+            -- BINARY TieuDe LIKE :tieude or //BINARY is to convert words into binary so that it becomes "diacritic match" but sometimes it doens\'n the way it is expected to.
+             TieuDe REGEXP :tieude',
             [
                 //'tieude' => '%'. $term . '%',
                 //'tomtat' => '%'. $term . '%',
-                'tieude' =>  "[[:<:]]" . $term . '[[:>:]]'//this is match exact word, [[:>:]] is word boundary
+                'tieude' =>  "\\b" . $term . '\\b'//this is match exact word, \\b or previously [[:>:]] is word boundary
             ]
         );//dùng BINARY vì ở đây search string với UTF-8, ko sẽ ra cả những chữ ko dấu tương tự (https://kipalog.com/posts/Cach-tim-kiem-co-dau-tren-Mysql---Search-utf8-on-Mysql)
 
