@@ -187,18 +187,21 @@ class PagesController extends Controller
         DB::select(
             'SELECT * FROM tintuc where 
             -- BINARY TieuDe LIKE :tieude or
-            BINARY TomTat LIKE :tomtat',
+            BINARY TieuDe REGEXP :tieude',////BINARY is to convert words into binary so that it becomes "diacritic match"
             [
                 //'tieude' => '%'. $term . '%',
-                'tomtat' => '%'. $term . '%'
+                //'tomtat' => '%'. $term . '%',
+                'tieude' =>  "[[:<:]]" . $term . '[[:>:]]'//this is match exact word, [[:>:]] is word boundary
             ]
         );//dùng BINARY vì ở đây search string với UTF-8, ko sẽ ra cả những chữ ko dấu tương tự (https://kipalog.com/posts/Cach-tim-kiem-co-dau-tren-Mysql---Search-utf8-on-Mysql)
 
         // dd(DB::getQueryLog());// view the query log(arg)
+
         
         foreach($tintuc as $tt)
         {
-            echo $tt->TomTat.'<br>';
+            echo $tt->TieuDe.'<br>';
+            echo $tt->TomTat."<hr>";
         }
     }
 
