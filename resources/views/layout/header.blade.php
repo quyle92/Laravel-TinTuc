@@ -28,6 +28,13 @@
 			        <button type="submit" class="btn btn-default">Submit</button>{!! csrf_field() !!}
 			    </form>
 
+                <form class="navbar-form navbar-left" role="search" method="get" action="search">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="Search-Complex" name="term">
+                    </div>
+                    <button type="submit" class="btn btn-default">Submit</button>{!! csrf_field() !!}
+                </form>                
+
 			    <ul class="nav navbar-nav pull-right">
 
                     @if(Auth::check())

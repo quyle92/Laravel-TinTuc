@@ -156,4 +156,5 @@ Route::get('user-settings/{user}', 'PagesController@userSettings');
 Route::post('user-settings','PagesController@postuserSettings');
 Route::get('register','PagesController@getRegister');
 Route::post('register','PagesController@postRegister');
-Route::get('search','PagesController@search');
+Route::get('search',['as' => 'search', 'uses' => 'PagesController@search']);
+Route::get('search-complex',['as' => 'search-complex', 'uses' => 'PagesController@searchComplex']);

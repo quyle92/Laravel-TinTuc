@@ -183,25 +183,47 @@ class PagesController extends Controller
         DB::enableQueryLog();// enable the query log, phải để trc câu lệnh DB::, ko thì dd(DB::getQueryLog());sẽ ko chạy 
 
         $term = $request->term;
-        $tintuc = 
-        DB::select(
-            'SELECT * FROM tintuc where 
-            -- BINARY TieuDe LIKE :tieude or //BINARY is to convert words into binary so that it becomes "diacritic match" but sometimes it doens\'n the way it is expected to.
-             TieuDe REGEXP :tieude',
-            [
-                //'tieude' => '%'. $term . '%',
-                //'tomtat' => '%'. $term . '%',
-                'tieude' =>  "\\b" . $term . '\\b'//this is match exact word, \\b or previously [[:>:]] is word boundary
-            ]
-        );//dùng BINARY vì ở đây search string với UTF-8, ko sẽ ra cả những chữ ko dấu tương tự (https://kipalog.com/posts/Cach-tim-kiem-co-dau-tren-Mysql---Search-utf8-on-Mysql)
+        // $tintuc = // cách này dùng paginate ko đc, ra lỗi "Call to a member function paginate() on array"
+        // DB::select(
+        //     'SELECT * FROM tintuc where 
+        //     -- BINARY TieuDe LIKE :tieude or //BINARY is to convert words into binary so that it becomes "diacritic match" but sometimes it doens\'n the way it is expected to.
+        //      TieuDe REGEXP :tieude',
+        //     [
+        //         //'tieude' => '%'. $term . '%',
+        //         //'tomtat' => '%'. $term . '%',
+        //         'tieude' =>  "\\b" . $term . '\\b'//this is match exact word, \\b or previously [[:>:]] is word boundary
+        //     ]
+        // )->paginate(2);//dùng BINARY vì ở đây search string với UTF-8, ko sẽ ra cả những chữ ko dấu tương tự (https://kipalog.com/posts/Cach-tim-kiem-co-dau-tren-Mysql---Search-utf8-on-Mysql)
 
         // dd(DB::getQueryLog());// view the query log(arg)
 
-        
+        $tintuc = DB::table('tintuc')->where('TieuDe','REGEXP',"\\b" . $term . "\\b")->orWhere('TomTat','REGEXP',"\\b" . $term . "\\b")->paginate(1);
+        /*cách 1*/
+        $tintuc = $tintuc->appends(['term' => $term]);// nếu ko có thì The function works for page 1st but on page 2nd it doesn't
+        /*End cách 1*/
+
         foreach($tintuc as $tt)
         {
-            echo $tt->TieuDe.'<br>';
-            echo $tt->TomTat."<hr>";
+            // echo $tt->TieuDe.'<br>';
+            // echo $tt->TomTat."<hr>";
+            return view('pages.search',compact('tintuc','term'));
+        }
+    }
+
+    public function searchComplex(Request $request)
+    {
+         DB::enableQueryLog();
+        $term = $request->term;
+
+        $tintuc = DB::table('tintuc')->where('TieuDe','REGEXP',"\\b" . $term . "\\b")->orWhere('TomTat','REGEXP',"\\b" . $term . "\\b")->paginate(1);
+
+        $tintuc = $tintuc->appends(['term' => $term]);
+
+        foreach($tintuc as $tt)
+        {
+            // echo $tt->TieuDe.'<br>';
+            // echo $tt->TomTat."<hr>";
+            return view('pages.search',compact('tintuc','term'));
         }
     }
 
