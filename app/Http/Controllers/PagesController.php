@@ -41,7 +41,7 @@ class PagesController extends Controller
     public function tintuc($id)
     {
         $tintuc = TinTuc::find($id);
-        $tinnoibat = TinTuc::where('NoiBat',1)->take(5)->get();
+        $tinnoibat = TinTuc::where('NoiBat',1)->take(5)->get();dd($tinnoibat);
         //cách 1:
         $id_loaitin = $tintuc->TinTuctoLoaiTin->id;
         $tinlienquan = TinTuc::where([
@@ -195,13 +195,13 @@ class PagesController extends Controller
         //     ]
         // )->paginate(2);//dùng BINARY vì ở đây search string với UTF-8, ko sẽ ra cả những chữ ko dấu tương tự (https://kipalog.com/posts/Cach-tim-kiem-co-dau-tren-Mysql---Search-utf8-on-Mysql)
 
-        // dd(DB::getQueryLog());// view the query log(arg)
+        
 
         $tintuc = DB::table('tintuc')->where('TieuDe','REGEXP',"\\b" . $term . "\\b")->orWhere('TomTat','REGEXP',"\\b" . $term . "\\b")->paginate(1);
         /*cách 1*/
         $tintuc = $tintuc->appends(['term' => $term]);// nếu ko có thì The function works for page 1st but on page 2nd it doesn't
         /*End cách 1*/
-
+       // dd(DB::getQueryLog());// view the query log(arg)
         foreach($tintuc as $tt)
         {
             // echo $tt->TieuDe.'<br>';
@@ -212,19 +212,29 @@ class PagesController extends Controller
 
     public function searchComplex(Request $request)
     {
-         DB::enableQueryLog();
-        $term = $request->term;
-
-        $tintuc = DB::table('tintuc')->where('TieuDe','REGEXP',"\\b" . $term . "\\b")->orWhere('TomTat','REGEXP',"\\b" . $term . "\\b")->paginate(1);
-
-        $tintuc = $tintuc->appends(['term' => $term]);
-
-        foreach($tintuc as $tt)
+        DB::enableQueryLog();
+        $terms = $request->terms;
+        $terms = explode(',', $terms);//var_dump($terms);
+        $tintuc_arr = null;
+        foreach($terms as $term)
         {
+           $tintuc_arr[]= $tintuc = DB::table('tintuc')->where('TieuDe','REGEXP',"\\b" . $term . "\\b")->get();
+            //$tintuc->paginate(2);
+            //$tintuc = $tintuc->appends(['term' => $term]);
+           
+        }
+        //var_dump($tintuc_arr);
+        //dd($tintuc_arr);
+        //$tintuc->paginate(2);
+        // $tintuc = $tintuc->appends(['term' => $term]);
+        //dd(DB::getQueryLog());// view the query log(arg)
+       // dd($tintuc);
+       // foreach($tintuc as $tt)
+        //{
             // echo $tt->TieuDe.'<br>';
             // echo $tt->TomTat."<hr>";
-            return view('pages.search',compact('tintuc','term'));
-        }
+            return view('pages.search-complex',compact('tintuc_arr','terms'));
+        //}
     }
 
 }

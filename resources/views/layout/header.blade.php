@@ -28,9 +28,9 @@
 			        <button type="submit" class="btn btn-default">Submit</button>{!! csrf_field() !!}
 			    </form>
 
-                <form class="navbar-form navbar-left" role="search" method="get" action="search">
+                <form class="navbar-form navbar-left" role="search" method="get" action="search-complex">
                     <div class="form-group">
-                      <input type="text" class="form-control" placeholder="Search-Complex" name="term">
+                      <input type="text" class="form-control" placeholder="Search-Complex" name="terms">
                     </div>
                     <button type="submit" class="btn btn-default">Submit</button>{!! csrf_field() !!}
                 </form>                
